@@ -31,7 +31,7 @@ async function main() {
   // 当项目的远端仓库不是目标仓库时，切换远程仓库
   if (!remoteRepository.includes(repository)) {
     await runIfNotDry('git', ['remote', 'rm', 'origin'])
-    await runIfNotDry('git', ['remote', 'add', 'origin', `${repository}`])
+    await runIfNotDry('git', ['remote', 'add', 'origin', repository])
   }
   //   remote rm origin
   //   git remote add  origin https://github.com/zsxinghen/vue-project.git
@@ -42,12 +42,11 @@ async function main() {
   //   git push --set-upstream origin master
 
   const {
-    stdout: branchs
+    stdout: branches
   } = await run('git', ['branch', '-a'], {
     stdio: 'pipe'
   })
-  console.log(branchs)
-  branchsStr = `${branchs} \n创建新分支`.replace(/[*]|(\s+)/g, ' ').trim()
+  branchesStr = `${branches} \n创建新分支`.replace(/[*]|(\s+)/g, ' ').trim()
   step('\n推送分支确认...')
   let {
     remoteBranch
@@ -55,7 +54,7 @@ async function main() {
     type: 'select',
     name: 'remoteBranch',
     message: 'Select release type',
-    choices: branchsStr.split(' ')
+    choices: branchesStr.split(' ')
   })
 
   if (remoteBranch == '创建新分支') {
@@ -67,7 +66,8 @@ async function main() {
       name: 'branchName',
       message: '请输入分支名称'
     })
-
+    await runIfNotDry('git', ['branch', branchName])
+    await runIfNotDry('git', ['checkout', branchName])
     remoteBranch = branchName
   } else {
     step('\n拉取远程分支代码...')
@@ -75,7 +75,7 @@ async function main() {
     await runIfNotDry('git', [
       'pull',
       'origin',
-      `${remoteBranch}`,
+      remoteBranch,
       '--allow-unrelated-histories'
     ])
   }
