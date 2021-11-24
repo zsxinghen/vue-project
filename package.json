@@ -23,7 +23,9 @@
     "open": "open http://localhost:5000/packages/template-explorer/local.html",
     "preinstall": "node ./scripts/preinstall.js",
     "prebuild-sfc-playground": "node scripts/build.js compiler ref-transform shared -af cjs && node scripts/build.js runtime reactivity shared -af esm-bundler && node scripts/build.js vue -f esm-bundler-runtime && node scripts/build.js vue -f esm-browser-runtime && node scripts/build.js compiler-sfc -f esm-browser",
-    "build-sfc-playground": "cd packages/sfc-playground && vite build"
+    "build-sfc-playground": "cd packages/sfc-playground && vite build",
+    "dev:sourcemap": "node scripts/dev.js --sourcemap",
+    "publish": "node ./scripts/publish.js "
   },
   "types": "test-dts/index.d.ts",
   "tsd": {
