@@ -46,7 +46,7 @@ async function main() {
   } = await run('git', ['branch', '-a'], {
     stdio: 'pipe'
   })
-  branchesStr = `${branches} \n创建新分支`.replace(/[*]|(\s+)/g, ' ').trim()
+  branchesStr = `${branches} \n创建新分支`.replace(/[*]|(\s+)/g, ' ').replace('  ', '').trim()
   step('\n推送分支确认...')
   let {
     remoteBranch
